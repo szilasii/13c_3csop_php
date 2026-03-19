@@ -1,60 +1,18 @@
-
-
 <?php 
 
-
-    $valtozo_nev = "ertek";
-    echo $valtozo_nev;
-    $nev = "Jani";
-    echo "Szia, ". $nev."!"; // Szia Jani!
-    echo "Szia, $nev!"; // Szia Jani!
-
-    $szam = 42;
-    function szam_dupla(){
-     global $szam; // A globális változó elérése a függvényen belül   
-     return $szam * 2;
-    }
-
-    $nev = "alma";
-    $$nev = "piros"; // Ez létrehoz egy új változót $alma néven, aminek az értéke piros lesz"
-    echo $alma; // Ez kiírja: piros
-    $adat = ["nev" => "Lacika", "kor" => 25];
-    var_dump($adat);
-
-function szamlalo() {
-    static $x = 0;
-    $x++;
-    echo $x . "<br>";
-}
-
-    szamlalo();
-    szamlalo();
-    szamlalo();
+header("Access-Control-allow-origin: *");
+header("Access-Control-Allow-Methods: GET, POST");
+header("Access-Control-Allow-Headers: Content-Type");
+require __DIR__ . '/controller/UserController.php';
+require __DIR__ . '/core/Router.php';
 
 
+$router = new Router();
 
-function osszead(int $a, int $b): int {
-    return $a + $b;
-}
+$router->addRoute('GET', '/api/users', ['UserController', 'getUser']);
+$router->addRoute('GET', '/api/users/{id}', ['UserController', 'getUserById']);
+$router->addRoute('POST', '/api/users', ['UserController', 'createUser']);
 
-echo osszead(5, 7);
-
-$jegy = 4;
-
-if ($jegy == 5) {
-    echo "Kiváló";
-} elseif ($jegy == 4) {
-    echo "jó";
-} elseif ($jegy == 3) {
-    echo "közepes";
-} elseif ($jegy == 2) {
-    echo "elégséges";
-} elseif ($jegy == 1) {
-    echo "elégtelen";
-} else {
-    echo "Hibás jegy!";
-}
-
-
+$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 ?>
